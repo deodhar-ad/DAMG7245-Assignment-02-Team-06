@@ -7,6 +7,8 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import boto3
 import os
+import zipfile
+import io
 
 # Code to scrap the links and store the files in local.
 
@@ -107,3 +109,59 @@ def upload_zip_files(local_folder, bucket_name, s3_folder):
 
 # Upload ZIP files to "zipped/" folder
 upload_zip_files(LOCAL_FOLDER, S3_BUCKET_NAME, "zipped")
+
+# Code to upload the unzipped files to s3
+# AWS Configuration
+AWS_ACCESS_KEY = "AKIAZ3MGNBRVHQNLMGV4"
+AWS_SECRET_KEY = "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"
+AWS_REGION = "us-east-1"
+S3_BUCKET_NAME = "team-6-a2-ds"
+
+# Initialize S3 client
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY,
+    region_name=AWS_REGION,
+)
+
+def unzip_and_store_separately(s3_bucket, zipped_folder, unzipped_folder):
+    """Extracts each ZIP file in 'zipped/' and stores it as an individual folder in 'unzipped_folders/'."""
+    
+    # List all ZIP files in the "zipped/" folder
+    response = s3_client.list_objects_v2(Bucket=s3_bucket, Prefix=zipped_folder)
+    
+    if "Contents" not in response:
+        print("No ZIP files found in the zipped folder.")
+        return
+    
+    for item in response["Contents"]:
+        zip_key = item["Key"]
+        if not zip_key.endswith(".zip"):
+            continue  # Skip non-ZIP files
+
+        zip_filename = zip_key.split("/")[-1].replace(".zip", "")  # Extract filename without extension
+        destination_folder = f"{unzipped_folder}/{zip_filename}/"  # Create separate folder for each ZIP
+
+        print(f"Processing: {zip_key} -> Extracting to {destination_folder}")
+
+        # Download ZIP file from S3
+        zip_obj = s3_client.get_object(Bucket=s3_bucket, Key=zip_key)
+        zip_content = io.BytesIO(zip_obj["Body"].read())
+
+        # Extract ZIP file
+        with zipfile.ZipFile(zip_content, "r") as zip_ref:
+            for file_name in zip_ref.namelist():
+                file_data = zip_ref.read(file_name)
+                
+                # Define the destination path in S3
+                extracted_key = f"{destination_folder}{file_name}"
+                
+                # Upload extracted file to its own folder in S3
+                s3_client.put_object(Bucket=s3_bucket, Key=extracted_key, Body=file_data)
+                print(f"✅ Extracted and uploaded: {extracted_key}")
+
+    print("✅ All ZIP files have been extracted into separate folders.")
+
+# Run the function
+unzip_and_store_separately(S3_BUCKET_NAME, "zipped", "unzipped_folders")
