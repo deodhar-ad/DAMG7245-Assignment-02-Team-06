@@ -5,6 +5,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import boto3
+import os
 
 # Code to scrap the links and store the files in local.
 
@@ -72,3 +74,36 @@ print("\nAll ZIP files downloaded successfully in:", download_dir)
 
 # Close the browser
 driver.quit()
+
+
+# Code to store the zip files in S3
+
+# AWS Configuration
+AWS_ACCESS_KEY = "AKIAZ3MGNBRVHQNLMGV4"
+AWS_SECRET_KEY = "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"
+AWS_REGION = "us-east-1"
+S3_BUCKET_NAME = "team-6-a2-ds"
+
+LOCAL_FOLDER = r"C:\Users\poorv\SEC_Financial_Statements_ASS2_SRI"  # Path containing ZIP files
+
+# Initialize S3 client
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY,
+    region_name=AWS_REGION,
+)
+
+def upload_zip_files(local_folder, bucket_name, s3_folder):
+    """Uploads all ZIP files from local folder to S3 in the 'zipped/' folder."""
+    for file in os.listdir(local_folder):
+        if file.endswith(".zip"):
+            local_path = os.path.join(local_folder, file)
+            s3_key = f"{s3_folder}/{file}"  # Store ZIP in "zipped/" folder
+
+            # Upload ZIP file
+            s3_client.upload_file(local_path, bucket_name, s3_key)
+            print(f"✅ Uploaded: {file} to s3://{bucket_name}/{s3_key}")
+
+# Upload ZIP files to "zipped/" folder
+upload_zip_files(LOCAL_FOLDER, S3_BUCKET_NAME, "zipped")
