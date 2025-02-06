@@ -86,7 +86,7 @@ AWS_SECRET_KEY = "rIr98bt5HSTWfMh5Ouh6JGpvBlxt8NlE0D91iVwL"
 AWS_REGION = "us-east-1"
 S3_BUCKET_NAME = "team-6-a2-ds"
 
-LOCAL_FOLDER = r"C:\Users\poorv\SEC_Financial_Statements_ASS2_SRI"  # Path containing ZIP files
+LOCAL_FOLDER = r"C:\Users\poorv\SEC_Financial_Statements_ASS2"  # Path containing ZIP files
 
 # Initialize S3 client
 s3_client = boto3.client(

@@ -1,0 +1,64 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local environment files
+.env
+*.env
+
+# Ignore credentials (Sensitive AWS Keys)
+AWS_ACCESS_KEY
+AWS_SECRET_KEY
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore downloaded ZIP files
+SEC_Financial_Statements_ASS2/
+
+# Ignore Chrome WebDriver binaries
+chromedriver*
+chromedriver.exe
+
+# Ignore Selenium & WebDriverManager cache
+.wdm/
+
+# Ignore virtual environments
+venv/
+.env/
+env/
+*.venv
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore output files
+*.csv
+*.xlsx
+*.json
+
+# Ignore compressed archives
+*.zip
+*.tar.gz
+*.rar
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.swo
+
+# Ignore boto3 cache (AWS SDK)
+.aws/
+
+# Ignore S3-related temporary files
+unzip_temp/
+unzipped_folders/
