@@ -1,0 +1,45 @@
+# Ignore environment files (Security risk)
+.env
+*.env
+config.ini
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+*.log
+logs/
+
+# Ignore virtual environment folders
+venv/
+.env/
+.venv/
+*.egg-info/
+
+# Ignore Jupyter Notebook checkpoints (If using Jupyter)
+.ipynb_checkpoints/
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+
+# Ignore dependency lock files (Optional)
+Pipfile.lock
+poetry.lock
+
+# Ignore large data files (Raw & Processed)
+data/
+datasets/
+extracted_tsv/
+extracted_quarters/
+sec_data_zips/
+temp_json_batches/
+*.zip
+*.tsv
+*.json
+
+# Ignore AWS & Snowflake credentials
+.aws/
+.snowflake/
