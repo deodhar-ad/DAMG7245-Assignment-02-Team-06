@@ -28,6 +28,7 @@ venv/
 # Ignore dependency lock files (Optional)
 Pipfile.lock
 poetry.lock
+requirements.txt.lock
 
 # Ignore large data files (Raw & Processed)
 data/
@@ -43,3 +44,26 @@ temp_json_batches/
 # Ignore AWS & Snowflake credentials
 .aws/
 .snowflake/
+credentials.yml
+profiles.yml
+
+# Ignore Logs
+*.log
+logs/
+
+# Ignore Airflow & DBT cache files
+airflow/logs/
+airflow/plugins/
+airflow/airflow-webserver.pid
+
+dbt_project/target/
+dbt_project/logs/
+dbt_project/dbt_packages/
+
+migrations/
+
+# Ignore Docker overrides & volumes
+docker-compose.override.yml
+.airflow/
+docker-volumes/
+*.pid
