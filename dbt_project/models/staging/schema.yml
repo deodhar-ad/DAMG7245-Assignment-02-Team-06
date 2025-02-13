@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Staged SEC financial data from JSON files"
+    database: sec_financial_data
+    schema: raw_data
+    tables:
+      - name: sec_financial_json
+        description: "Financial statement JSON data from SEC"

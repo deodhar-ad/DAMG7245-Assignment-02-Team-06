@@ -1,0 +1,37 @@
+tests:
+  - name: company_name_not_null
+    description: "Ensure company_name is never NULL"
+    model: stg_data_json
+    columns:
+      - name: company_name
+        tests:
+          - not_null
+
+  - name: fiscal_year_valid
+    description: "Ensure Fiscal Year is always a valid integer and within range"
+    model: stg_data_json
+    columns:
+      - name: fiscal_year
+        tests:
+          - not_null
+          - integer
+          - accepted_values:
+              values: [2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]
+
+  - name: fiscal_period_valid
+    description: "Ensure Fiscal Period is a valid quarter identifier"
+    model: stg_data_json
+    columns:
+      - name: fiscal_period
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Q1', 'Q2', 'Q3', 'Q4']
+
+  - name: financial_data_not_null
+    description: "Ensure Financial Data (JSON) is never NULL"
+    model: stg_data_json
+    columns:
+      - name: financial_data
+        tests:
+          - not_null
