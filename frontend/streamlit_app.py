@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # Backend FastAPI URL
-BACKEND_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:8000"
 
 # Streamlit App Title
 st.title("📊 SEC Financial Data")
@@ -18,7 +18,7 @@ with tab_json:
     # Fetch JSON Data from View
     st.header("📄 View JSON")
     if st.button("Fetch JSON Data"):
-        url = f"{BACKEND_URL}/json_view/"
+        url = f"{BASE_URL}/json_view/"
         response = requests.get(url)
 
         if response.status_code == 200:
