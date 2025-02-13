@@ -3,15 +3,8 @@ import snowflake.connector
 import os
 import pandas as pd
 import io
-from fastapi.responses import StreamingResponse
-
-app = FastAPI()
-
-from fastapi.responses import StreamingResponse, JSONResponse
-import snowflake.connector
 import csv
-import io
-import os
+from fastapi.responses import StreamingResponse, JSONResponse
 from dotenv import load_dotenv
 
 app = FastAPI()
