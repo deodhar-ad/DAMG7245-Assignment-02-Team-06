@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: balance_sheet
+    description: "Denormalized balance sheet fact table derived from SEC filings."
+    columns:
+      - name: company_name
+        description: "Company Name (part of the composite primary key)."
+        tests:
+          - not_null
+      - name: fiscal_year
+        description: "Fiscal year of the filing (part of the composite primary key)."
+        tests:
+          - not_null
+      - name: fiscal_period
+        description: "Fiscal period (part of the composite primary key)."
+        tests:
+          - not_null
+      - name: total_assets
+        description: "Calculated total assets from the SEC balance sheet data."
+      - name: total_liabilities
+        description: "Calculated total liabilities from the SEC balance sheet data."
+      - name: total_equity
+        description: "Calculated total equity from the SEC balance sheet data."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ["company_name", "fiscal_year", "fiscal_period"]
+
+  - name: income_statement
+    description: "Denormalized income statement fact table derived from SEC filings."
+    columns:
+      - name: company_name
+        description: "Company identifier (part of composite primary key)."
+        tests:
+          - not_null
+      - name: fiscal_year
+        description: "Fiscal year of the filing (part of composite primary key)."
+        tests:
+          - not_null
+      - name: fiscal_period
+        description: "Fiscal period for the filing (part of composite primary key)."
+        tests:
+          - not_null
+      - name: revenue
+        description: "Revenue recorded for the period."
+      - name: operating_income
+        description: "Operating income for the period."
+      - name: net_income
+        description: "Net income for the period."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ["company_name", "fiscal_year", "fiscal_period"]
+
+  - name: cash_flow
+    description: "Denormalized cash flow fact table derived from SEC filings."
+    columns:
+      - name: company_name
+        description: "Company identifier (part of composite primary key)."
+        tests:
+          - not_null
+      - name: fiscal_year
+        description: "Fiscal year of the filing (part of composite primary key)."
+        tests:
+          - not_null
+      - name: fiscal_period
+        description: "Fiscal period for the filing (part of composite primary key)."
+        tests:
+          - not_null
+      - name: operating_cash_flow
+        description: "Net cash provided by or used in operating activities."
+      - name: investing_cash_flow
+        description: "Net cash provided by or used in investing activities."
+      - name: financing_cash_flow
+        description: "Net cash provided by or used in financing activities."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ["company_name", "fiscal_year", "fiscal_period"]
