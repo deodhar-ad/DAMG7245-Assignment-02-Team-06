@@ -8,3 +8,87 @@ sources:
     tables:
       - name: sec_financial_json
         description: "Financial statement JSON data from SEC"
+
+      - name: sec_numbers
+        description: "Numerical data extracted from SEC filings"
+        columns:
+          - name: adsh
+            description: "Accession Number"
+          - name: tag
+            description: "Tag Name"
+          - name: version
+            description: "Taxonomy Version"
+          - name: ddate
+            description: "Date of Fact"
+          - name: qtrs
+            description: "Number of Quarters"
+          - name: uom
+            description: "Unit of Measure"
+          - name: segments
+            description: "Segment Information"
+          - name: coreg
+            description: "Coregistrant"
+          - name: value
+            description: "Reported Value"
+          - name: footnote
+            description: "Footnote"
+
+      - name: sec_submissions
+        description: "Company Submission Data from SEC"
+        columns:
+          - name: adsh
+            description: "Accession Number"
+          - name: cik
+            description: "Central Index Key"
+          - name: name
+            description: "Company Name"
+          - name: sic
+            description: "Standard Industrial Classification"
+          - name: countryba
+            description: "Business Address Country"
+          - name: stprba
+            description: "Business Address State"
+          - name: cityba
+            description: "Business Address City"
+          - name: zipba
+            description: "Business Address Zip"
+          - name: bas1
+            description: "Business Address Street 1"
+          - name: bas2
+            description: "Business Address Street 2"
+          - name: period
+            description: "Report Period"
+          - name: fy
+            description: "Fiscal Year"
+          - name: fp
+            description: "Fiscal Period"
+
+      - name: sec_tags
+        description: "SEC Tag Taxonomies"
+        columns:
+          - name: tag
+            description: "Tag Name"
+          - name: version
+            description: "Taxonomy Version"
+          - name: custom
+            description: "Is Custom Tag?"
+          - name: datatype
+            description: "Data Type"
+          - name: crdr
+            description: "Credit/Debit"
+
+      - name: sec_presentation
+        description: "SEC Financial Presentation Order"
+        columns:
+          - name: adsh
+            description: "Accession Number"
+          - name: report
+            description: "Report Number"
+          - name: line
+            description: "Line Number"
+          - name: stmt
+            description: "Statement Type"
+          - name: tag
+            description: "Tag Name"
+          - name: plabel
+            description: "Presentation Label"

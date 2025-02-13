@@ -35,3 +35,131 @@ tests:
       - name: financial_data
         tests:
           - not_null
+			
+tests:
+  # ===============================
+  # Validation for sec_numbers (num.txt)
+  # ===============================
+  - name: accession_number_not_null
+    description: "Ensure accession_number is never NULL in sec_numbers"
+    model: stg_sec_num
+    columns:
+      - name: accession_number
+        tests:
+          - not_null
+
+  - name: report_date_valid
+    description: "Ensure report_date is never NULL and is a valid date"
+    model: stg_sec_num
+    columns:
+      - name: report_date
+        tests:
+          - not_null
+          - date
+
+  - name: fiscal_quarters_valid
+    description: "Ensure fiscal_quarters is an integer between 1 and 4"
+    model: stg_sec_num
+    columns:
+      - name: fiscal_quarters
+        tests:
+          - integer
+          - accepted_values:
+              values: [1, 2, 3, 4]
+
+  - name: reported_value_not_null
+    description: "Ensure reported_value is never NULL in sec_numbers"
+    model: stg_sec_num
+    columns:
+      - name: reported_value
+        tests:
+          - not_null
+          - numeric
+
+  # ===============================
+  # Validation for sec_submissions (sub.txt)
+  # ===============================
+  - name: company_name_not_null
+    description: "Ensure company_name is never NULL in sec_submissions"
+    model: stg_sec_sub
+    columns:
+      - name: company_name
+        tests:
+          - not_null
+
+  - name: fiscal_year_valid
+    description: "Ensure Fiscal Year is always a valid integer and within range in sec_submissions"
+    model: stg_sec_sub
+    columns:
+      - name: fiscal_year
+        tests:
+          - not_null
+          - integer
+          - accepted_values:
+              values: [2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]
+
+  - name: fiscal_period_valid
+    description: "Ensure Fiscal Period is a valid quarter identifier in sec_submissions"
+    model: stg_sec_sub
+    columns:
+      - name: fiscal_period
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Q1', 'Q2', 'Q3', 'Q4']
+
+  # ===============================
+  # Validation for sec_tags (tag.txt)
+  # ===============================
+  - name: tag_name_not_null
+    description: "Ensure tag_name is never NULL in sec_tags"
+    model: stg_sec_tag
+    columns:
+      - name: tag_name
+        tests:
+          - not_null
+
+  - name: taxonomy_version_not_null
+    description: "Ensure taxonomy_version is never NULL in sec_tags"
+    model: stg_sec_tag
+    columns:
+      - name: taxonomy_version
+        tests:
+          - not_null
+
+  - name: is_custom_boolean
+    description: "Ensure is_custom is a valid boolean in sec_tags"
+    model: stg_sec_tag
+    columns:
+      - name: is_custom
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+
+  # ===============================
+  # Validation for sec_presentation (pre.txt)
+  # ===============================
+  - name: statement_type_not_null
+    description: "Ensure statement_type is never NULL in sec_presentation"
+    model: stg_sec_pre
+    columns:
+      - name: statement_type
+        tests:
+          - not_null
+
+  - name: report_number_valid
+    description: "Ensure report_number is an integer in sec_presentation"
+    model: stg_sec_pre
+    columns:
+      - name: report_number
+        tests:
+          - integer
+
+  - name: tag_name_not_null_presentation
+    description: "Ensure tag_name is never NULL in sec_presentation"
+    model: stg_sec_pre
+    columns:
+      - name: tag_name
+        tests:
+          - not_null

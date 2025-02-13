@@ -160,3 +160,94 @@ with tab_denorm:
         file_name=f"{table_choice}.csv",
         mime="text/csv"
     )
+
+with tab_raw:
+    st.header("Normalized Tables Preview & Visualizations")
+
+    normalized_tables = ["sec_numbers", "sec_submissions", "sec_tags", "sec_presentation"]
+    table_choice_norm = st.selectbox("Select Normalized Table", normalized_tables)
+
+    preview_endpoint_norm = f"{BASE_URL}/normalized/preview/{table_choice_norm}"
+
+    st.info(f"Fetching preview data for **{table_choice_norm}** ...")
+    response = requests.get(preview_endpoint_norm)
+
+    if response.status_code == 200:
+        data = response.json().get("data")
+        columns = response.json().get("columns")
+        df = pd.DataFrame()
+        
+        if columns and data:
+            df = pd.DataFrame(data, columns=columns)
+            st.subheader("Preview of first 20 rows")
+            st.dataframe(df)
+        else:
+            st.warning("No data available to display")
+
+        # Visualizations for normalized data
+        if table_choice_norm == "sec_numbers":
+            if not df.empty and {"TAG", "VALUE"}.issubset(set(df.columns)):
+                st.subheader("Top 10 Reported Values by Tag")
+
+                top_tags = df.groupby("TAG")["VALUE"].sum().nlargest(10).reset_index()
+                fig = px.bar(
+                    top_tags,
+                    x="TAG",
+                    y="VALUE",
+                    title="Top 10 SEC Reported Values",
+                    labels={"VALUE": "Reported Value", "TAG": "Tag"},
+                )
+                fig.update_layout(width=600, height=500)
+                st.plotly_chart(fig)
+            else:
+                st.warning("Required columns not available for sec_numbers visualization.")
+
+        elif table_choice_norm == "sec_submissions":
+            if not df.empty and {"COUNTRYBA"}.issubset(set(df.columns)):
+                st.subheader("Submissions by Country")
+
+                country_counts = df["COUNTRYBA"].value_counts().reset_index()
+                country_counts.columns = ["Country", "Submissions"]
+
+                fig = px.pie(
+                    country_counts,
+                    names="Country",
+                    values="Submissions",
+                    title="SEC Submissions by Country",
+                )
+                fig.update_layout(width=500, height=500)
+                st.plotly_chart(fig)
+            else:
+                st.warning("Required columns not available for sec_submissions visualization.")
+
+        elif table_choice_norm == "sec_tags":
+            if not df.empty and {"DATATYPE"}.issubset(set(df.columns)):
+                st.subheader("Tag Data Types Distribution")
+
+                datatype_counts = df["DATATYPE"].value_counts().reset_index()
+                datatype_counts.columns = ["Data Type", "Count"]
+
+                fig = px.bar(
+                    datatype_counts,
+                    x="Data Type",
+                    y="Count",
+                    title="Distribution of SEC Tag Data Types",
+                    labels={"Count": "Number of Tags"},
+                )
+                fig.update_layout(width=600, height=500)
+                st.plotly_chart(fig)
+            else:
+                st.warning("Required columns not available for sec_tags visualization.")
+
+    else:
+        st.error("Failed to load preview data.")
+
+    # Download Button
+    download_url_norm = f"{BASE_URL}/normalized/download/{table_choice_norm}"
+    csv_data_norm = requests.get(download_url_norm).content
+    st.download_button(
+        label="Download Full Normalized Data as CSV",
+        data=csv_data_norm,
+        file_name=f"{table_choice_norm}.csv",
+        mime="text/csv"
+    )
