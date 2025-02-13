@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: sec_financial_data
+    schema: raw_data
+    tables:
+      - name: raw_financial_json
+        
