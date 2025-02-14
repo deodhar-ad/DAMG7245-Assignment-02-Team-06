@@ -12,7 +12,7 @@ BASE_URL = "http://localhost:8000"
 st.title("📊 SEC Financial Data")
 st.header("Assignment 2 - Team 6")
 
-tab_raw, tab_json, tab_denorm = st.tabs(["Raw Data", "JSON", "Denormalized"])
+tab_json, tab_denorm, tab_raw  = st.tabs(["JSON", "Denormalized", "Raw Data"])
 
 with tab_json:
     # Fetch JSON Data from View
@@ -162,21 +162,23 @@ with tab_denorm:
     )
 
 with tab_raw:
-    st.header("Normalized Tables Preview & Visualizations")
+    st.header("Raw Data Preview & Visualizations")
 
-    normalized_tables = ["sec_numbers", "sec_submissions", "sec_tags", "sec_presentation"]
-    table_choice_norm = st.selectbox("Select Normalized Table", normalized_tables)
+    # Create a dropdown for selecting raw data tables
+    raw_tables = ["sec_numbers", "sec_submissions", "sec_tags", "sec_presentation"]
+    table_choice_raw = st.selectbox("Select Raw Data Table", raw_tables)
 
-    preview_endpoint_norm = f"{BASE_URL}/normalized/preview/{table_choice_norm}"
+    # Build the preview endpoint
+    preview_endpoint_raw = f"{BASE_URL}/normalized/preview/{table_choice_raw}"
 
-    st.info(f"Fetching preview data for **{table_choice_norm}** ...")
-    response = requests.get(preview_endpoint_norm)
+    st.info(f"Fetching preview data for **{table_choice_raw}** ...")
+    response = requests.get(preview_endpoint_raw)
 
     if response.status_code == 200:
         data = response.json().get("data")
         columns = response.json().get("columns")
         df = pd.DataFrame()
-        
+
         if columns and data:
             df = pd.DataFrame(data, columns=columns)
             st.subheader("Preview of first 20 rows")
@@ -184,11 +186,12 @@ with tab_raw:
         else:
             st.warning("No data available to display")
 
-        # Visualizations for normalized data
-        if table_choice_norm == "sec_numbers":
+        # Visualizations based on table selection
+        viz_placeholder = st.empty()
+        if table_choice_raw == "sec_numbers":
             if not df.empty and {"TAG", "VALUE"}.issubset(set(df.columns)):
-                st.subheader("Top 10 Reported Values by Tag")
-
+                viz_placeholder.subheader("Top 10 Reported Values by Tag")
+                
                 top_tags = df.groupby("TAG")["VALUE"].sum().nlargest(10).reset_index()
                 fig = px.bar(
                     top_tags,
@@ -198,17 +201,17 @@ with tab_raw:
                     labels={"VALUE": "Reported Value", "TAG": "Tag"},
                 )
                 fig.update_layout(width=600, height=500)
-                st.plotly_chart(fig)
+                viz_placeholder.plotly_chart(fig)
             else:
-                st.warning("Required columns not available for sec_numbers visualization.")
+                viz_placeholder.warning("Required columns not available for sec_numbers visualization.")
 
-        elif table_choice_norm == "sec_submissions":
+        elif table_choice_raw == "sec_submissions":
             if not df.empty and {"COUNTRYBA"}.issubset(set(df.columns)):
-                st.subheader("Submissions by Country")
-
+                viz_placeholder.subheader("Submissions by Country")
+                
                 country_counts = df["COUNTRYBA"].value_counts().reset_index()
                 country_counts.columns = ["Country", "Submissions"]
-
+                
                 fig = px.pie(
                     country_counts,
                     names="Country",
@@ -216,17 +219,17 @@ with tab_raw:
                     title="SEC Submissions by Country",
                 )
                 fig.update_layout(width=500, height=500)
-                st.plotly_chart(fig)
+                viz_placeholder.plotly_chart(fig)
             else:
-                st.warning("Required columns not available for sec_submissions visualization.")
+                viz_placeholder.warning("Required columns not available for sec_submissions visualization.")
 
-        elif table_choice_norm == "sec_tags":
+        elif table_choice_raw == "sec_tags":
             if not df.empty and {"DATATYPE"}.issubset(set(df.columns)):
-                st.subheader("Tag Data Types Distribution")
-
+                viz_placeholder.subheader("Tag Data Types Distribution")
+                
                 datatype_counts = df["DATATYPE"].value_counts().reset_index()
                 datatype_counts.columns = ["Data Type", "Count"]
-
+                
                 fig = px.bar(
                     datatype_counts,
                     x="Data Type",
@@ -235,19 +238,20 @@ with tab_raw:
                     labels={"Count": "Number of Tags"},
                 )
                 fig.update_layout(width=600, height=500)
-                st.plotly_chart(fig)
+                viz_placeholder.plotly_chart(fig)
             else:
-                st.warning("Required columns not available for sec_tags visualization.")
+                viz_placeholder.warning("Required columns not available for sec_tags visualization.")
+        else: viz_placeholder.error("No Visulizations for this table")
 
     else:
         st.error("Failed to load preview data.")
 
     # Download Button
-    download_url_norm = f"{BASE_URL}/normalized/download/{table_choice_norm}"
-    csv_data_norm = requests.get(download_url_norm).content
+    download_url_raw = f"{BASE_URL}/normalized/download/{table_choice_raw}"
+    csv_data_raw = requests.get(download_url_raw).content
     st.download_button(
-        label="Download Full Normalized Data as CSV",
-        data=csv_data_norm,
-        file_name=f"{table_choice_norm}.csv",
+        label="Download Full Raw Data as CSV",
+        data=csv_data_raw,
+        file_name=f"{table_choice_raw}.csv",
         mime="text/csv"
     )

@@ -35,8 +35,7 @@ tests:
       - name: financial_data
         tests:
           - not_null
-			
-tests:
+
   # ===============================
   # Validation for sec_numbers (num.txt)
   # ===============================

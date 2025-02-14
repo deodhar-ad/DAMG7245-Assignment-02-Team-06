@@ -5,14 +5,26 @@ import pandas as pd
 import io
 import csv
 from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
 
 app = FastAPI()
 
 load_dotenv()
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change "*" to specific frontend domain for security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Allowed table names for denormalized data
 ALLOWED_TABLES = {"balance_sheet", "income_statement", "cash_flow"}
-ALLOWED_NORMALIZED_TABLES = {"sec_num", "sec_pre", "sec_sub", "sec_tag"}
+ALLOWED_NORMALIZED_TABLES = {"sec_numbers", "sec_submissions", "sec_tags", "sec_presentation"}
 
 # Load Snowflake Credentials from Environment Variables
 SNOWFLAKE_USER = os.getenv("SNOWFLAKE_USER")
@@ -74,10 +86,7 @@ def get_json_view_data():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-@app.get("/raw_data")
-def get_raw_data():
-    pass
-
+    
 @app.get("/denormalized/preview/{table_name}")
 def get_denormalized_preview(table_name: str):
     if table_name not in ALLOWED_TABLES:
@@ -126,38 +135,32 @@ def download_denormalized(table_name: str):
         cur.close()
         conn.close()
 
-
 @app.get("/normalized/preview/{table_name}")
 def get_normalized_preview(table_name: str):
-    """
-    Fetch a preview of normalized table data.
-    """
     if table_name not in ALLOWED_NORMALIZED_TABLES:
-        raise HTTPException(status_code=400, detail="Invalid table name. Must be one of: sec_num, sec_pre, sec_sub, sec_tag")
-
+        raise HTTPException(status_code=400, detail="Invalid table name. Must be one of: sec_numbers, sec_submissions, sec_tags, sec_presentation")
+   
     conn = get_snowflake_connection()
     cur = conn.cursor()
     try:
         query = f"SELECT * FROM {table_name} LIMIT 20"
         cur.execute(query)
         data = cur.fetchall()
+        # You can also include column names
         columns = [desc[0] for desc in cur.description]
-        return JSONResponse(content={"columns": columns, "data": data})
+        content={"columns": columns, "data": data}
+        return JSONResponse(content=jsonable_encoder(content))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         cur.close()
         conn.close()
 
-
 @app.get("/normalized/download/{table_name}")
 def download_normalized(table_name: str):
-    """
-    Download normalized table data as a CSV.
-    """
     if table_name not in ALLOWED_NORMALIZED_TABLES:
-        raise HTTPException(status_code=400, detail="Invalid table name. Must be one of: sec_num, sec_pre, sec_sub, sec_tag")
-
+        raise HTTPException(status_code=400, detail="Invalid table name. Must be one of: sec_numbers, sec_submissions, sec_tags, sec_presentation")
+   
     conn = get_snowflake_connection()
     cur = conn.cursor()
     try:
@@ -165,13 +168,14 @@ def download_normalized(table_name: str):
         cur.execute(query)
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
-
+       
         output = io.StringIO()
         writer = csv.writer(output)
-        writer.writerow(columns)  # Write header row
-        writer.writerows(rows)  # Write data rows
+        # Write header row
+        writer.writerow(columns)
+        writer.writerows(rows)
         output.seek(0)
-
+ 
         headers = {"Content-Disposition": f"attachment; filename={table_name}.csv"}
         return StreamingResponse(output, media_type="text/csv", headers=headers)
     except Exception as e:
