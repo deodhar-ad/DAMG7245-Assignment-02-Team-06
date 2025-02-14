@@ -39,7 +39,7 @@ Financial analysts need structured, easily accessible financial data to assess c
 ![image](https://github.com/user-attachments/assets/be58daa7-1193-479f-ad4a-33d3e1c7cf28)
 
 ## Codelabs Documentation
-https://docs.google.com/document/d/1-WxpkCi1k9hVc1cTz1rq6AVEBW2zkzuSv3u3GAVa1sk/edit?usp=sharing
+https://deodhar-ad.github.io/DAMG7245-Assignment-02-Team-06/
 
 ## Hosted Applications links 
 - Frontend : https://damg7245-assignment-2-team-6.streamlit.app/
