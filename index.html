@@ -1,0 +1,353 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id=""
+                  title=""
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Assignment 2 - SEC Financial Database" duration="0">
+        <h2 is-upgraded><strong>Aditi Ashutosh Deodhar</strong></h2>
+<h2 is-upgraded><strong>Lenin Kumar Gorle</strong></h2>
+<h2 is-upgraded><strong>Poorvika Girish Babu</strong></h2>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Introduction" duration="0">
+        <p>We are trying to build a master financial statement database to support fundamental analysis of US public companies. The database is implemented using Snowflake and data is sourced from SEC Financial Statement Data Sets. </p>
+<p>The goal of the project is to - </p>
+<ul>
+<li>Automate SEC financial data ingestion &amp; processing</li>
+<li>Implement multiple storage formats (Raw, JSON, Fact Tables)</li>
+<li>Validate and transform data using DBT</li>
+<li>Orchestrate everything with Airflow</li>
+<li>Develop APIs &amp; UI for financial data analysis</li>
+</ul>
+<p>The following technologies are being used:</p>
+<ul>
+<li><strong>Airflow</strong> - Orchestrating data pipelines</li>
+<li><strong>AWS S3</strong> - Storing raw and processed data</li>
+<li><strong>Snowflake</strong> - Cloud data warehouse for financial statements</li>
+<li><strong>DBT</strong> - Data transformation and validation</li>
+<li><strong>FastAPI</strong> - Backend API for data retrieval</li>
+<li><strong>Streamlit</strong> - Web interface for data access</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Problem Statement" duration="0">
+        <p>Problem - </p>
+<p>Financial analysts need structured, easily accessible financial data to assess companies&#39; performances. However, SEC data is delivered in raw TSV format, making it difficult to query and analyze efficiently.</p>
+<p>Solution - </p>
+<p>Create a centralized database in Snowflake that supports three different storage approaches, making it easier for analysts to access financial data efficiently.</p>
+<h3 is-upgraded>Constraints &amp; Requirements - </h3>
+<ul>
+<li>Data must be fetched dynamically from the SEC website</li>
+<li>Three different storage methodologies must be implemented</li>
+<li>Automated pipeline execution using Airflow</li>
+<li>Validation and transformation via DBT</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Proof of Concept" duration="0">
+        <p>Major technologies and why they are chosen - </p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Technology</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Purpose</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>AWS S3</strong></p>
+</td><td colspan="1" rowspan="1"><p>Stores SEC raw and processed data</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Snowflake</strong></p>
+</td><td colspan="1" rowspan="1"><p>Centralized data warehouse for querying</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Airflow</strong></p>
+</td><td colspan="1" rowspan="1"><p>Manages data pipeline automation</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>DBT</strong></p>
+</td><td colspan="1" rowspan="1"><p>Data validation &amp; transformation</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>FastAPI</strong></p>
+</td><td colspan="1" rowspan="1"><p>Backend API for Snowflake data access</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Streamlit</strong></p>
+</td><td colspan="1" rowspan="1"><p>Web interface for querying financial data</p>
+</td></tr>
+</table>
+<p>Initial Tests &amp; Setup -</p>
+<ul>
+<li>Tested SEC website scraping using Selenium</li>
+<li>Validated AWS S3 integration by storing raw TSV files</li>
+<li>Successfully connected Snowflake to Airflow &amp; DBT</li>
+<li>Loaded sample JSON data into Snowflake to confirm querying</li>
+</ul>
+<p>Anticipated challenges and proposed solutions - </p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Challenge</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Proposed Solution</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Large dataset processing</p>
+</td><td colspan="1" rowspan="1"><p>Parallel processing &amp; batch uploads</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ensuring data integrity</p>
+</td><td colspan="1" rowspan="1"><p>Use DBT &amp; SQL validation checks</p>
+</td></tr>
+</table>
+<p> Integrating DBT on Airflow                       Dockerized the airflow and integrated</p>
+<p>                                                                  DBT</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Architecture Diagram" duration="0">
+        <p class="image-container"><img style="width: 672.45px" src="img\\a66bea94e6c3c42c.png"></p>
+<p><strong>Component Description:</strong></p>
+<ol type="1" start="1">
+<li><strong>Data Scraping</strong>: Financial datasets in TSV format and Selenium Webdriver for data scraping</li>
+<li><strong>Storage</strong>: Stores raw TSV &amp; processed JSON data</li>
+<li><strong>Airflow</strong>: Automates ingestion &amp; transformation</li>
+<li><strong>Snowflake</strong>: Stores and processes financial data</li>
+<li><strong>FastAPI &amp; Streamlit</strong>: Provides API access &amp; UI visualization</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Walkthrough of the Application" duration="0">
+        <h3 is-upgraded><strong>Step-by-Step Implementation</strong></h3>
+<ol type="1" start="1">
+<li>Scrape SEC Data Links using Selenium &amp; store ZIP files in S3. </li>
+<li>Extract &amp; Process Data into different formats:</li>
+</ol>
+<ul>
+<li>Store raw TSV files in Snowflake.</li>
+<li>Convert to JSON format for denormalization (also stored in S3)</li>
+</ul>
+<p class="image-container"><img style="width: 566.65px" src="img\\5b586528202a7b0e.png"></p>
+<ul>
+<li>Transform into fact tables (Balance Sheet, Income Statement). </li>
+</ul>
+<ol type="1" start="3">
+<li> Automate using Airflow DAGs:</li>
+</ol>
+<ul>
+<li>Pipeline triggers based on selected year &amp; quarter. </li>
+</ul>
+<p>Raw Txt Pipeline</p>
+<p class="image-container"><img style="width: 206.25px" src="img\\2486665ac07ae2a7.png"> </p>
+<p>JSON pipeline </p>
+<p class="image-container"><img style="width: 219.50px" src="img\\1933cfb7f4333e1f.png"></p>
+<p>Create fact tables pipeline</p>
+<p class="image-container"><img style="width: 242.50px" src="img\\cff5761da06ea103.png"></p>
+<ol type="1" start="4">
+<li> Validate using DBT:</li>
+</ol>
+<ul>
+<li>Ensures data integrity before querying. </li>
+</ul>
+<ol type="1" start="5">
+<li>Deploy API &amp; UI:</li>
+</ol>
+<ul>
+<li>FastAPI for backend queries.</li>
+</ul>
+<p>Raw txt Pipeline</p>
+<p class="image-container"><img style="width: 544.50px" src="img\\ae15e0d468160fb8.png"></p>
+<p class="image-container"><img style="width: 548.90px" src="img\\59401145944fb04a.png"></p>
+<p>JSON pipeline</p>
+<p class="image-container"><img style="width: 355.72px" src="img\\77e65756b0a83614.png"></p>
+<p>Fact Tables Pipeline</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\216a0bd21222875c.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\860ba2a513df52d9.png"></p>
+<ul>
+<li>Streamlit for user-friendly access.</li>
+</ul>
+<p>Raw txt Pipeline</p>
+<p class="image-container"><img style="width: 411.00px" src="img\\162da3ad4e310556.png"></p>
+<p class="image-container"><img style="width: 407.50px" src="img\\d478595c2743b74e.png"></p>
+<p>JSON pipeline</p>
+<p class="image-container"><img style="width: 399.03px" src="img\\d51fd1e83481e5ee.png"></p>
+<p>Fact Tables Pipeline</p>
+<p class="image-container"><img style="width: 462.80px" src="img\\ae2ba4777f6a4e28.png"></p>
+<p class="image-container"><img style="width: 434.63px" src="img\\9514409ea66d4109.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Application Workflow" duration="0">
+        <h3 is-upgraded><strong>Full Data Flow</strong></h3>
+<ol type="1" start="1">
+<li><strong>Web Scraping &amp; Data Extraction (Pre-Pipeline Stage)</strong></li>
+</ol>
+<ul>
+<li>A Selenium webdriver dynamically fetches ZIP file links from the SEC website.</li>
+<li>The scraper downloads these ZIP files and uploads them to AWS S3 in a structured folder format (sec_data_zips/).</li>
+<li>Extracted TSV files are stored in corresponding quarterly folders within S3 (sec_extracted_tsv/).</li>
+</ul>
+<ol type="1" start="2">
+<li>  <strong>   2.         Raw Data Approach</strong></li>
+</ol>
+<ul>
+<li>Store the raw TSV data and store it in S3 (sec_extracted_tsv/) before triggering Airflow.</li>
+</ul>
+<p><strong>Raw Data Pipeline -&gt;</strong></p>
+<ul>
+<li><strong>Task 1:</strong> Create a stage in Snowflake to stage the Raw data from S3 (sec_txt_stage).</li>
+<li><strong>Task 2:</strong> Airflow DAG creates table to store txt data from stage and loads them into Snowflake (SEC_NUMBERS,SEC_PRESENTATION, SEC_SUBMISSIONS,SEC_TAGS).</li>
+<li><strong>Task 3:</strong> Run DBT transformations to validate and structure the txt data.</li>
+<li><strong>Task 4: </strong>DBT inserts the data into the tables created on Snowflake</li>
+</ul>
+<ol type="1" start="3">
+<li><strong>JSON Transformation Approach </strong></li>
+</ol>
+<ul>
+<li>Convert raw TSV data into JSON format and store it in S3 (sec_json_data/) before triggering Airflow.</li>
+</ul>
+<p><strong>Airflow Pipeline -&gt;</strong></p>
+<ul>
+<li><strong>Task 1:</strong> Create a stage in Snowflake to stage the JSON data from S3 (SEC_JSON_STAGE).</li>
+<li><strong>Task 2:</strong> Airflow DAG creates table to store JSONs from stage and loads them into Snowflake (SEC_FINANCIAL_JSON).</li>
+<li><strong>Task 3:</strong> Run DBT transformations to validate and structure the JSON financial data.</li>
+</ul>
+<p><strong>Fact Tables Pipeline -&gt;</strong></p>
+<ul>
+<li><strong>Task 1:</strong> Create a stage in Snowflake to stage the JSON data from S3 (SEC_JSON_STAGE).</li>
+<li><strong>Task 2:</strong> Airflow DAG creates table to store JSONs from stage and loads them into Snowflake (SEC_FINANCIAL_JSON).</li>
+<li><strong>Task 3:</strong> Run DBT transformations to validate and structure the JSON financial data.</li>
+<li><strong>Task 4: </strong>Airflow DAG creates the fact tables on snowflake</li>
+<li><strong>Task 5: </strong>Run DBT transformations to validate the fact tables data</li>
+<li><strong>Task 6: </strong>DBT inserts the data into the fact tables created on Snowflake</li>
+</ul>
+<ol type="1" start="4">
+<li><strong>Data Validation &amp; Transformation</strong></li>
+</ol>
+<ul>
+<li>DBT tests ensure schema correctness before queries are executed.</li>
+<li>Data is validated for missing fields, correct financial periods, and data consistency before insertion.</li>
+</ul>
+<ol type="1" start="5">
+<li><strong>Backend API &amp; UI</strong></li>
+</ol>
+<ul>
+<li>FastAPI provides endpoints to query processed Snowflake data.</li>
+<li>Streamlit UI allows users to fetch financial data, apply filters, and download data as CSV.</li>
+</ul>
+<h3 is-upgraded><strong>RAW TXT Pipeline Orchestration (Airflow DAGs &amp; Scheduling)</strong></h3>
+<ul>
+<li><strong>Airflow DAG Structure for Raw Data Pipeline:</strong></li>
+<li>Raw_data.py: Loads txt data from S3 → Snowflake.  Runs DBT models to validate the Raw txt data→ Create Tables to load on Snowflake → DBT validations → DBT inserts the data into tables.</li>
+</ul>
+<p>Code snippet of the Airflow DAG for staging and loading part- </p>
+<p class="image-container"><img style="width: 570.50px" src="img\\7a0510c5eddc8376.png"></p>
+<p class="image-container"><img style="width: 596.50px" src="img\\e0e0de2974082305.png"></p>
+<p class="image-container"><img style="width: 558.00px" src="img\\74898e6824736a7f.png"></p>
+<p class="image-container"><img style="width: 556.50px" src="img\\485e469376ee6392.png"></p>
+<p>Code snippet for DBT transformation - </p>
+<p class="image-container"><img style="width: 578.50px" src="img\\c2196711b606c557.png"></p>
+<h3 is-upgraded><strong>JSON Pipeline Orchestration (Airflow DAGs &amp; Scheduling)</strong></h3>
+<ul>
+<li><strong>Airflow DAG Structure for JSON Transformation:</strong></li>
+<li>json_s3_to_snowflake_dbt.py: Loads JSON data from S3 → Snowflake. Runs DBT models to validate &amp; transform JSON financial data to a view (flattened JSON).</li>
+</ul>
+<p>Code snippet of the Airflow DAG for staging and loading part- </p>
+<p class="image-container"><img style="width: 365.93px" src="img\\c5eafde65d59c1e2.png"></p>
+<p>Code snippet for DBT transformation - </p>
+<p class="image-container"><img style="width: 344.50px" src="img\\c9f1824fab07a5ef.png"></p>
+<ul>
+<li><strong>Airflow DAG Structure for Denormalized fact tables:</strong></li>
+<li>create_fact_tables.py: Loads JSON data from S3 → Snowflake. Runs DBT models to validate &amp; transform JSON financial data to a view (flattened JSON). → Create Fact Tables on Snowflake → DBT validations → DBT inserts the data into views and tables</li>
+</ul>
+<p>Code snippet of the Airflow DAG for staging and loading part- </p>
+<p class="image-container"><img style="width: 624.00px" src="img\\28d42708c32f68a.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\d2c5a22b1fa49b76.png"></p>
+<p>Code snippet for DBT transformation - </p>
+<p class="image-container"><img style="width: 624.00px" src="img\\708119ea69ea8ad1.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\44068ac826a18267.png"></p>
+<h3 is-upgraded><strong>Challenges &amp; Solutions</strong></h3>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Challenge</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Solution</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ensuring JSON format consistency</p>
+</td><td colspan="1" rowspan="1"><p>Applied <strong>schema validation in DBT</strong> before ingestion</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Handling large JSON files</p>
+</td><td colspan="1" rowspan="1"><p><strong>Batch processing &amp; staged ingestion</strong> into Snowflake</p>
+</td></tr>
+</table>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="References" duration="0">
+        <ol type="1" start="1">
+<li><strong>SEC Financial Statement Data Sets</strong> -<a href="https://www.sec.gov/files/financial-statement-data-sets.pdf" target="_blank">SEC Data</a></li>
+<li><strong>SEC Financial Statement Converter (GitHub)</strong> -<a href="https://github.com/Angular2Guy/DataScience/tree/master/SecFinancialStatementConverter" target="_blank">GitHub Repo</a></li>
+<li><strong>SEC Markets Data</strong> -<a href="https://www.sec.gov/data-research/sec-markets-data/financial-statement-data-sets" target="_blank">SEC Markets</a></li>
+<li><strong>Snowflake Documentation</strong> -<a href="https://docs.snowflake.com/en/" target="_blank">Snowflake Docs</a></li>
+<li><strong>Airflow Documentation</strong> -<a href="https://airflow.apache.org/docs/" target="_blank">Apache Airflow Docs</a></li>
+<li><strong>DBT Documentation</strong> - DBT Docs</li>
+<li><strong>FastAPI Documentation</strong> - FastAPI Docs</li>
+<li><strong>Streamlit Documentation</strong> - Streamlit Docs</li>
+<li><strong>AWS S3 Documentation</strong> -<a href="https://docs.aws.amazon.com/s3/index.html" target="_blank">AWS S3 Docs</a></li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Disclosures" duration="0">
+        <p>I] Team Member Contribution attestation</p>
+<p>WE ATTEST THAT WE HAVEN&#39;T USED ANY OTHER STUDENT&#39;S WORK IN OUR</p>
+<p>ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK</p>
+<p>Contribution:</p>
+<ul>
+<li>Member 1:Aditi Ashutosh Deodhar  33.33 %</li>
+<li>Member 2: Lenin Kumar Gorle        33.33 %</li>
+<li>Member 3: Poorvika Girish Babu   33.33 %</li>
+</ul>
+<p>II] AI Usage disclosure</p>
+<ul>
+<li>AI was used to understand concepts and automate redundant tasks.</li>
+<li>It was <strong>not used</strong> for documentation writing.</li>
+<li>AI-assisted tools were used <strong>partially</strong> for code generation, specifically for fixing errors but <strong>not</strong> for creating complete function logic.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
