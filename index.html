@@ -1,0 +1,147 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Tab 1</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id="tab-1"
+                  title="Tab 1"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Assignment 2- Team 6" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Post-Upload Testing Report" duration="0">
+        <ol type="1" start="1">
+<li><h2 is-upgraded><strong>Steps Taken to Ensure Successful Data Upload</strong></h2>
+</li>
+</ol>
+<h3 is-upgraded><strong>Raw Storage (As-Is)</strong></h3>
+<ul>
+<li>Verified that the Extracted files from the SEC site existed on S3(sec_extracted_tsv/).</li>
+<li>Verified the connections for AWS, Snowflake and Airflow were properly configured. </li>
+<li>Used LIST @sec_txt_stage to confirm that the extracted files were staged</li>
+<li>Checked if the tables (sec_numbers, sec_presentation, sec_submissions and sec_tags were created before uploading the data. </li>
+<li>Checked the row count of the tables using :</li>
+</ul>
+<p>             SELECT COUNT(*) FROM raw_data.sec_numbers;</p>
+<h3 is-upgraded><strong>JSON Transformation</strong></h3>
+<ul>
+<li>Verified JSON files exist in S3 (sec_json_data/).</li>
+<li>Used LIST @sec_json_stage to confirm JSON files were staged.</li>
+</ul>
+<p>Checked row count in JSON table:<br> SELECT COUNT(*) FROM raw_data.sec_financial_json;</p>
+<h3 is-upgraded><strong>Denormalized Fact Tables</strong></h3>
+<ul>
+<li> Verified the existence of JSON files used for staging on S3(sec_json_data/).</li>
+<li> Verified the default connections for snowflake and aws are configured   correctly on airflow</li>
+<li> Verified the variables used to extract the JSON file and AWS Bucket are configured properly on airflow</li>
+<li> Used LIST @sec_json_stage to confirm JSON files were staged.</li>
+<li> Checked if the fact tables (income_statement, cash_flow and balance_sheet are created on snowflake before inserting the data.</li>
+<li>Once the tables are created, checked the row count using the query</li>
+</ul>
+<p>SELECT COUNT(*) FROM raw_data.balance_sheet;</p>
+<ol type="1" start="2">
+<li><h2 is-upgraded><strong>Verification of Data Integrity in Snowflake</strong></h2>
+</li>
+</ol>
+<p>To ensure the integrity of uploaded data, the following checks were performed:</p>
+<h3 is-upgraded><strong>Raw Data Integrity Checks</strong></h3>
+<p>        – Ensured that the Raw Data tables are populated by running the query:</p>
+<p>           SELECT COUNT(*) FROM raw_data.sec_numbers;</p>
+<p>               SELECT COUNT(*) FROM raw_data.sec_presentation;</p>
+<p>               SELECT COUNT(*) FROM raw_data.sec_submissions;</p>
+<p>           SELECT COUNT(*) FROM raw_data.sec_tags;</p>
+<p>        – Ensured that the DBT Validations passed.</p>
+<h3 is-upgraded><strong>JSON Data Integrity Checks</strong></h3>
+<p>-- Ensure JSON table is populated</p>
+<p>SELECT COUNT(*) FROM raw_data.sec_financial_json;</p>
+<h3 is-upgraded><strong>Fact Table Integrity Checks</strong></h3>
+<p>            -- Ensured the fact_tables are populated. Verified the count using queries</p>
+<p>               SELECT COUNT(*) FROM raw_data.balance_sheet</p>
+<p>               SELECT COUNT(*) FROM raw_data.income_statement</p>
+<p>               SELECT COUNT(*) FROM raw_data.cash_flow</p>
+<p>          -- Ensured all the dbt tests are passed. Checked the logs on Airflow to see if all the </p>
+<p>              given tests are passed</p>
+<p>           – Checked if the Primary Key Constraint holds up for all the tables,by using the</p>
+<p>              queries</p>
+<p>              SELECT company_name,fiscal_year, fiscal_period,COUNT(*) from</p>
+<p>              raw_data.balance_sheet group by </p>
+<p>               (company_name,fiscal_year, fiscal_period) having COUNT(*)&gt;1;</p>
+<ol type="1" start="3">
+<li><h2 is-upgraded><strong>Methods Used to Confirm Pipeline Execution</strong></h2>
+</li>
+</ol>
+<h3 is-upgraded><strong>Airflow Execution Validation</strong></h3>
+<ul>
+<li>Verified Airflow UI logs <strong>show successful DAG runs</strong>.</li>
+<li>Checked that no tasks failed in <strong>JSON S3 to Snowflake DAG</strong>.</li>
+<li>Checked that no tasks failed in <strong>Create_fact_tables_to_snowflake DAG</strong></li>
+<li>Confirmed execution timestamps in <strong>Airflow Logs</strong>.</li>
+</ul>
+<h3 is-upgraded><strong>Snowflake Load History Validation</strong></h3>
+<p>Checked information_schema.load_history for successful loads:<br> SELECT COUNT(*) FROM information_schema.load_history WHERE table_name = &#39;SEC_FINANCIAL_JSON&#39;;</p>
+<ol type="1" start="4">
+<li><h2 is-upgraded><strong> Running Tests for the Pipeline</strong></h2>
+</li>
+</ol>
+<h3 is-upgraded><strong>DBT Tests (Automated Validations)</strong></h3>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Test Type</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Model/Table</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Expected Outcome</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>integer</p>
+</td><td colspan="1" rowspan="1"><p>stg_data_json.fiscal_year</p>
+</td><td colspan="1" rowspan="1"><p>Year is always an integer</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>accepted_values</p>
+</td><td colspan="1" rowspan="1"><p>stg_data_json.fiscal_period</p>
+</td><td colspan="1" rowspan="1"><p>Values only Q1, Q2, Q3, Q4</p>
+</td></tr>
+</table>
+<p>  not null            stg_sec_num.sec_numbers                           reported_value not null </p>
+<p> date                    stg_sec_num.sec_numbers                     date is in correct format                 </p>
+<p>The following factors confirm that the <strong>data upload and transformation process was successful</strong>:</p>
+<ol type="1" start="1">
+<li><strong>Airflow logs confirm the successful execution</strong> of all DAGs without failures.</li>
+<li><strong>Snowflake query results confirm expected row counts</strong>, ensuring no data loss.</li>
+<li><strong>DBT tests validate the correctness of transformed JSON data</strong> before insertion into fact tables.</li>
+<li><strong>The final dataset in Snowflake is fully queryable</strong>, meaning data integrity is maintained.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
