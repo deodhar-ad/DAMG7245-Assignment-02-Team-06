@@ -7,6 +7,7 @@ import csv
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
+import uvicorn
 
 app = FastAPI()
 
@@ -183,3 +184,7 @@ def download_normalized(table_name: str):
     finally:
         cur.close()
         conn.close()
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # Render dynamically assigns PORT
+    uvicorn.run(app, host="0.0.0.0", port=port)
