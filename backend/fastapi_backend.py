@@ -68,7 +68,7 @@ def get_json_view_data():
     Fetch all JSON data from the STG_DATA_JSON view.
     """
     query = """
-        SELECT * FROM raw_data.STG_DATA_JSON
+        SELECT * FROM raw_data.STG_DATA_JSON LIMIT 20
     """
 
     try:

@@ -26,8 +26,8 @@ with tab_json:
             df = pd.DataFrame(data)
 
             # Limit displayed data to 100 rows
-            st.write("### Displaying first 100 rows")
-            st.dataframe(df.head(100))  
+            st.write("### Displaying first 20 rows")
+            st.dataframe(df.head(20))  
 
             # Enable CSV download without storing
             if not df.empty:
