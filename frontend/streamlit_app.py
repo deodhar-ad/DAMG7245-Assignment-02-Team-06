@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # Backend FastAPI URL
-BASE_URL = "https://damg7245-assignment-02-team-06.onrender.com"
+BASE_URL = "https://damg7245-assignment-2-team-6.onrender.com"
 
 # Streamlit App Title
 st.title("📊 SEC Financial Data")
