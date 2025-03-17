@@ -43,7 +43,7 @@ https://deodhar-ad.github.io/DAMG7245-Assignment-02-Team-06/
 
 ## Hosted Applications links 
 - Frontend : https://damg7245-assignment-2-team-6.streamlit.app/
-- Backend : https://damg7245-assignment-2-team-6.onrender.com
+- Backend : https://fastapi-service-992661127227.us-central1.run.app/docs
 
 ## Demo 
 https://shorturl.at/lIg9h
